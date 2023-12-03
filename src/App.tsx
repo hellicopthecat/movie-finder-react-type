@@ -1,25 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import styled, {ThemeProvider} from "styled-components";
+import {GlobalStyle} from "./theme/GlobalStyle";
+import {useRecoilValue} from "recoil";
+import {isDark} from "./store/atoms";
+import {darkTheme, lightTheme} from "./theme/theme";
+import {Outlet} from "react-router-dom";
+import HeaderComp from "./components/main/HeaderComp";
+const Wrapper = styled.div`
+  padding: 20px 0px;
+`;
 function App() {
+  const darkMode = useRecoilValue(isDark);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+      <GlobalStyle />
+      <Wrapper>
+        <HeaderComp />
+        <Outlet />
+      </Wrapper>
+    </ThemeProvider>
   );
 }
 
