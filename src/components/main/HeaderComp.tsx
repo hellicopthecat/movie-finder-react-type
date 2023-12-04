@@ -21,6 +21,7 @@ const Header = styled(motion.header)`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: ${(props) => props.theme.accetTxt};
   background-color: ${(props) => props.theme.bgColor};
 `;
 const NavCont = styled.nav`
@@ -50,7 +51,7 @@ const SearchInput = styled.input`
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 15px;
   &::placeholder {
-    color: ${(props) => props.theme.txtColor};
+    color: ${(props) => props.theme.accetTxt};
   }
 `;
 const ThemeBtnCont = styled.div`
@@ -69,6 +70,7 @@ const ThemeBtn = styled.button`
   border-radius: 100%;
   background-color: ${(props) => props.theme.accetTxt};
 `;
+
 const navVarient = {
   top: {backgroundColor: "#1B262C"},
   scroll: {backgroundColor: "rgba(0,0,0,0.5)"},
@@ -81,7 +83,7 @@ const HeaderComp = () => {
   const {scrollY} = useScroll();
   const setThemeMode = useSetRecoilState(isDark);
   useMotionValueEvent(scrollY, "change", (scrollVal) => {
-    if (scrollVal > 40) {
+    if (scrollVal > 80) {
       navAnimation.start("scroll");
     } else {
       navAnimation.start("top");

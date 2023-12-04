@@ -9,19 +9,21 @@ import ColumnComp from "../components/body/columnComp/ColumnComp";
 import {ITvLatest, ITvResponse} from "../type/apiModel";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import {sliderIndex, toggleLeaving} from "../store/atoms";
-import {AnimatePresence} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 import SliderBtn from "../components/utilcomp/SliderBtn";
 
 const TvCont = styled.div`
   margin-top: 85px;
 `;
 const ContWrapper = styled.div`
-  padding: 20px;
-  overflow: hidden;
+  position: relative;
+  margin-bottom: 350px;
 `;
-const RowSliderCont = styled.div`
+const RowSliderCont = styled(motion.div)`
   display: grid;
   grid-auto-flow: column;
+  position: absolute;
+  width: 100%;
   margin-bottom: 50px;
 `;
 const Title = styled.h2`
@@ -33,6 +35,17 @@ const ColumSliderCont = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 `;
+const sliderVariant = {
+  hidden: {
+    x: window.outerWidth + 10,
+  },
+  visible: {
+    x: 0,
+  },
+  exit: {
+    x: -window.outerWidth - 10,
+  },
+};
 const Tv: React.FC = () => {
   const offset = 6;
   const index = useRecoilValue(sliderIndex);
@@ -75,13 +88,20 @@ const Tv: React.FC = () => {
             />
           )}
           <ContWrapper>
+            <Title>AIRING TODAY</Title>
             <AnimatePresence
               initial={false}
               onExitComplete={() => setToggleLeaving((prev) => !prev)}
             >
-              <Title>AIRING TODAY</Title>
               <SliderBtn total={Number(totalAiring)} />
-              <RowSliderCont>
+              <RowSliderCont
+                variants={sliderVariant}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{tyep: "tween", duration: 1}}
+                key={index}
+              >
                 {airingTodayData?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
@@ -97,13 +117,22 @@ const Tv: React.FC = () => {
                   ))}
               </RowSliderCont>
             </AnimatePresence>
+          </ContWrapper>
+          <ContWrapper>
             <AnimatePresence
               initial={false}
               onExitComplete={() => setToggleLeaving((prev) => !prev)}
             >
               <Title>TV TOP RATED</Title>
               <SliderBtn total={Number(totalTv)} />
-              <RowSliderCont>
+              <RowSliderCont
+                variants={sliderVariant}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{tyep: "tween", duration: 1}}
+                key={index}
+              >
                 {topRateData?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
@@ -119,7 +148,8 @@ const Tv: React.FC = () => {
                   ))}
               </RowSliderCont>
             </AnimatePresence>
-
+          </ContWrapper>
+          <ContWrapper>
             <Title>UPCOMING MOVIE</Title>
             <ColumSliderCont>
               {popularData?.results.map((popular) => (

@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import Poster from "../../utilcomp/Poster";
 import {motion} from "framer-motion";
-import {Link} from "react-router-dom";
+import {Link, useMatch} from "react-router-dom";
 import {imgMaker} from "../../../util/utils";
 
 const SliderCont = styled(motion.div)<{$path: string}>`
@@ -25,6 +24,7 @@ const SliderCont = styled(motion.div)<{$path: string}>`
 const TxtCont = styled.div`
   position: absolute;
   top: 0;
+  left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,19 +49,20 @@ const sliderVariant = {
   hover: {scale: 1.3, zIndex: 80, transition: {delay: 0.5}},
 };
 const RowSlider: React.FC<IRowSlider> = ({movieID, movieTitle, posterPath}) => {
+  const movie = useMatch("/");
   return (
-    <Link to={`movie/${movieID + ""}`}>
-      <SliderCont
-        variants={sliderVariant}
-        initial="base"
-        whileHover="hover"
-        $path={imgMaker(posterPath)}
-      >
+    <SliderCont
+      variants={sliderVariant}
+      initial="base"
+      whileHover="hover"
+      $path={imgMaker(posterPath)}
+    >
+      <Link to={movie ? `movie/${movieID + ""}` : `/tv/${movieID}`}>
         <TxtCont>
           <RowSliderTitle>{movieTitle}</RowSliderTitle>
         </TxtCont>
-      </SliderCont>
-    </Link>
+      </Link>
+    </SliderCont>
   );
 };
 export default RowSlider;

@@ -4,6 +4,8 @@ import Home from "./views/Home";
 import Tv from "./views/Tv";
 import Search from "./views/Search";
 import MovieDetail from "./views/MovieDetail";
+import TvDetail from "./views/TvDetail";
+import ErrorPage from "./views/ErrorPage";
 
 export const router = createBrowserRouter(
   [
@@ -21,9 +23,22 @@ export const router = createBrowserRouter(
             },
           ],
         },
-        {path: "tv", element: <Tv />},
+        {
+          path: "tv",
+          element: <Tv />,
+          children: [
+            {
+              path: ":id",
+              element: <TvDetail />,
+            },
+          ],
+        },
         {path: "search", element: <Search />},
       ],
+    },
+    {
+      path: "/*",
+      element: <ErrorPage />,
     },
   ],
   {basename: process.env.PUBLIC_URL}

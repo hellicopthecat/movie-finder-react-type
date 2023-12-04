@@ -1,11 +1,24 @@
 import styled from "styled-components";
 import Poster from "../../utilcomp/Poster";
 import {Link} from "react-router-dom";
+import {imgMaker} from "../../../util/utils";
 
-const LatestCont = styled.div`
+const LatestCont = styled.div<{$path: string}>`
   position: relative;
-  background: linear-gradient(90deg, "transparent", "#000");
+  width: 100%;
+  height: 700px;
+  background: url(${(props) => props.$path !== null && imgMaker(props.$path)});
+  background-color: ${(props) => props.$path === null && props.theme.accetTxt};
+  background-size: cover;
+  background-position: center center;
   margin-bottom: 30px;
+`;
+const LatestGradient = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: ${(props) =>
+    `linear-gradient(transparent, ${props.theme.bgColor})`};
 `;
 const LatestTextCont = styled.div`
   position: absolute;
@@ -39,7 +52,8 @@ interface ILatest {
 }
 const Latest: React.FC<ILatest> = ({movieID, posterPath, title, overview}) => {
   return (
-    <LatestCont>
+    <LatestCont $path={posterPath}>
+      <LatestGradient />
       <LatestTextCont>
         <LatestTitle>{title}</LatestTitle>
         <LatestDesc>{overview}</LatestDesc>
@@ -47,7 +61,7 @@ const Latest: React.FC<ILatest> = ({movieID, posterPath, title, overview}) => {
           <LatestBtn>About Movie</LatestBtn>
         </Link>
       </LatestTextCont>
-      <Poster path={posterPath} size="original" />
+      {/* <Poster path={posterPath} size="original" /> */}
     </LatestCont>
   );
 };
