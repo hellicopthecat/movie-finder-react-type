@@ -3,6 +3,7 @@ import App from "./App";
 import Home from "./views/Home";
 import Tv from "./views/Tv";
 import Search from "./views/Search";
+import MovieDetail from "./views/MovieDetail";
 
 export const router = createBrowserRouter(
   [
@@ -10,7 +11,16 @@ export const router = createBrowserRouter(
       path: "/",
       element: <App />,
       children: [
-        {path: "/", element: <Home />},
+        {
+          path: "/",
+          element: <Home />,
+          children: [
+            {
+              path: "movie/:id",
+              element: <MovieDetail />,
+            },
+          ],
+        },
         {path: "tv", element: <Tv />},
         {path: "search", element: <Search />},
       ],

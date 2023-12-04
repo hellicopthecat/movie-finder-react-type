@@ -55,6 +55,7 @@ a{
 	color:inherit;
 }
 button{
+	cursor: pointer;
 	background-color:inherit;
 	border:none;
 }

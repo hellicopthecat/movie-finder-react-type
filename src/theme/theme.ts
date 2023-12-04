@@ -7,6 +7,6 @@ export const darkTheme: DefaultTheme = {
 };
 export const lightTheme: DefaultTheme = {
   bgColor: "#BBE1FA",
-  txtColor: "#1B262C",
-  accetTxt: "#0F4C75",
+  txtColor: "#000",
+  accetTxt: "#1B5C7A",
 };

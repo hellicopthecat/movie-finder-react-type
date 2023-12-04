@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Poster from "../../utilcomp/Poster";
+import {Link} from "react-router-dom";
 
 const LatestCont = styled.div`
   position: relative;
@@ -22,6 +23,13 @@ const LatestTitle = styled.h2`
 const LatestDesc = styled.p`
   width: 60%;
   font-size: 20px;
+  margin-bottom: 20px;
+`;
+const LatestBtn = styled.span`
+  display: inline-flex;
+  padding: 10px 20px;
+  color: ${(props) => props.theme.txtColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 interface ILatest {
   movieID: number;
@@ -35,6 +43,9 @@ const Latest: React.FC<ILatest> = ({movieID, posterPath, title, overview}) => {
       <LatestTextCont>
         <LatestTitle>{title}</LatestTitle>
         <LatestDesc>{overview}</LatestDesc>
+        <Link to={`movie/${movieID}`}>
+          <LatestBtn>About Movie</LatestBtn>
+        </Link>
       </LatestTextCont>
       <Poster path={posterPath} size="original" />
     </LatestCont>

@@ -7,6 +7,10 @@ import {useQuery} from "react-query";
 import RowSlider from "../components/body/rowComp/RowSlider";
 import ColumnComp from "../components/body/columnComp/ColumnComp";
 import {ITvLatest, ITvResponse} from "../type/apiModel";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import {sliderIndex, toggleLeaving} from "../store/atoms";
+import {AnimatePresence} from "framer-motion";
+import SliderBtn from "../components/utilcomp/SliderBtn";
 
 const TvCont = styled.div`
   margin-top: 85px;
@@ -29,8 +33,10 @@ const ColumSliderCont = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 `;
-
 const Tv: React.FC = () => {
+  const offset = 6;
+  const index = useRecoilValue(sliderIndex);
+  const setToggleLeaving = useSetRecoilState(toggleLeaving);
   const {data: latestData, isLoading: latestLoading} = useQuery<ITvLatest>(
     ["TV", "tvLatest"],
     tvApi.latest
@@ -48,6 +54,8 @@ const Tv: React.FC = () => {
 
   const isLoading =
     latestLoading || airingTodayLoading || popularLoading || topRateLoading;
+  const totalAiring = airingTodayData && airingTodayData?.results.length - 1;
+  const totalTv = topRateData && topRateData?.results.length - 1;
   return (
     <TvCont>
       {isLoading ? (
@@ -67,32 +75,51 @@ const Tv: React.FC = () => {
             />
           )}
           <ContWrapper>
-            <Title>AIRING TODAY</Title>
-            <RowSliderCont>
-              {airingTodayData?.results.map((airing) => (
-                <RowSlider
-                  key={airing.id}
-                  movieID={airing.id}
-                  movieTitle={
-                    airing.name !== "" ? airing.name : airing.original_name
-                  }
-                  posterPath={airing.poster_path}
-                />
-              ))}
-            </RowSliderCont>
-            <Title>TV TOP RATED</Title>
-            <RowSliderCont>
-              {topRateData?.results.map((airing) => (
-                <RowSlider
-                  key={airing.id}
-                  movieID={airing.id}
-                  movieTitle={
-                    airing.name !== "" ? airing.name : airing.original_name
-                  }
-                  posterPath={airing.poster_path}
-                />
-              ))}
-            </RowSliderCont>
+            <AnimatePresence
+              initial={false}
+              onExitComplete={() => setToggleLeaving((prev) => !prev)}
+            >
+              <Title>AIRING TODAY</Title>
+              <SliderBtn total={Number(totalAiring)} />
+              <RowSliderCont>
+                {airingTodayData?.results
+                  .slice(1)
+                  .slice(offset * index, offset * index + offset)
+                  .map((airing) => (
+                    <RowSlider
+                      key={airing.id}
+                      movieID={airing.id}
+                      movieTitle={
+                        airing.name !== "" ? airing.name : airing.original_name
+                      }
+                      posterPath={airing.poster_path}
+                    />
+                  ))}
+              </RowSliderCont>
+            </AnimatePresence>
+            <AnimatePresence
+              initial={false}
+              onExitComplete={() => setToggleLeaving((prev) => !prev)}
+            >
+              <Title>TV TOP RATED</Title>
+              <SliderBtn total={Number(totalTv)} />
+              <RowSliderCont>
+                {topRateData?.results
+                  .slice(1)
+                  .slice(offset * index, offset * index + offset)
+                  .map((airing) => (
+                    <RowSlider
+                      key={airing.id}
+                      movieID={airing.id}
+                      movieTitle={
+                        airing.name !== "" ? airing.name : airing.original_name
+                      }
+                      posterPath={airing.poster_path}
+                    />
+                  ))}
+              </RowSliderCont>
+            </AnimatePresence>
+
             <Title>UPCOMING MOVIE</Title>
             <ColumSliderCont>
               {popularData?.results.map((popular) => (

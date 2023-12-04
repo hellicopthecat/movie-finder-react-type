@@ -1,10 +1,16 @@
 import {Link, useMatch} from "react-router-dom";
 import styled from "styled-components";
 import Circle from "../utilcomp/Circle";
-import {useRecoilState} from "recoil";
+import {useSetRecoilState} from "recoil";
 import {isDark} from "../../store/atoms";
+import {
+  motion,
+  useAnimation,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
 
-const Header = styled.header`
+const Header = styled(motion.header)`
   position: fixed;
   z-index: 99;
   top: 0;
@@ -58,22 +64,32 @@ const ThemeBtnCont = styled.div`
   background-color: ${(props) => props.theme.txtColor};
 `;
 const ThemeBtn = styled.button`
-  cursor: pointer;
   width: 25px;
   height: 25px;
   border-radius: 100%;
   background-color: ${(props) => props.theme.accetTxt};
 `;
+const navVarient = {
+  top: {backgroundColor: "#1B262C"},
+  scroll: {backgroundColor: "rgba(0,0,0,0.5)"},
+};
 const HeaderComp = () => {
+  const navAnimation = useAnimation();
   const home = useMatch("/");
   const tv = useMatch("/tv");
   const search = useMatch("/search");
-  const [themeMode, setThemeMode] = useRecoilState(isDark);
-  const onClick = () => {
-    setThemeMode((prev) => !prev);
-  };
+  const {scrollY} = useScroll();
+  const setThemeMode = useSetRecoilState(isDark);
+  useMotionValueEvent(scrollY, "change", (scrollVal) => {
+    if (scrollVal > 40) {
+      navAnimation.start("scroll");
+    } else {
+      navAnimation.start("top");
+    }
+  });
+  const onSubmit = () => {};
   return (
-    <Header>
+    <Header initial="top" variants={navVarient} animate={navAnimation}>
       <NavCont>
         <Link to="/">
           <LogoImg
@@ -95,11 +111,10 @@ const HeaderComp = () => {
           </li>
         </Navlist>
       </NavCont>
-      <ThemeBtnCont onClick={onClick}>
-        <ThemeBtn onClick={onClick} />
+      <ThemeBtnCont>
+        <ThemeBtn onClick={() => setThemeMode((prev) => !prev)} />
       </ThemeBtnCont>
-      <SearchForm>
-        <label htmlFor="">Search</label>
+      <SearchForm onSubmit={onSubmit}>
         <SearchInput type="text" placeholder="Search Media" />
       </SearchForm>
     </Header>
