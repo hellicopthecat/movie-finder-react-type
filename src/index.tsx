@@ -3,9 +3,10 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import {RecoilRoot} from "recoil";
-import {RouterProvider} from "react-router-dom";
+import {HashRouter, RouterProvider} from "react-router-dom";
 import {router} from "./router";
 import {QueryClient, QueryClientProvider} from "react-query";
+import App from "./App";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,7 +16,9 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        <RouterProvider router={router} />
+        <HashRouter>
+          <App />
+        </HashRouter>
       </RecoilRoot>
     </QueryClientProvider>
   </React.StrictMode>

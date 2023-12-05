@@ -12,6 +12,7 @@ export const router = createBrowserRouter(
     {
       path: "/",
       element: <App />,
+      errorElement: <ErrorPage />,
       children: [
         {
           path: "/",
@@ -35,10 +36,6 @@ export const router = createBrowserRouter(
         },
         {path: "search", element: <Search />},
       ],
-    },
-    {
-      path: "/*",
-      element: <ErrorPage />,
     },
   ],
   {basename: process.env.PUBLIC_URL}

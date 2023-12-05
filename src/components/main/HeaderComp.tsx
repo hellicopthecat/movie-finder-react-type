@@ -1,7 +1,7 @@
 import {Link, useMatch} from "react-router-dom";
 import styled from "styled-components";
 import Circle from "../utilcomp/Circle";
-import {useSetRecoilState} from "recoil";
+import {useRecoilState} from "recoil";
 import {isDark} from "../../store/atoms";
 import {
   motion,
@@ -54,7 +54,7 @@ const SearchInput = styled.input`
     color: ${(props) => props.theme.accetTxt};
   }
 `;
-const ThemeBtnCont = styled.div`
+const ThemeBtnCont = styled(motion.div)`
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -64,24 +64,30 @@ const ThemeBtnCont = styled.div`
   border-radius: 25px;
   background-color: ${(props) => props.theme.txtColor};
 `;
-const ThemeBtn = styled.button`
+const ThemeBtn = styled(motion.button)<{$mode: boolean}>`
   width: 25px;
   height: 25px;
   border-radius: 100%;
   background-color: ${(props) => props.theme.accetTxt};
+  transform: ${(props) =>
+    props.$mode ? "translateX(0%)" : "translateX(100%)"};
+  transition: 0.4s ease-in-out;
 `;
-
+const UtilCont = styled.div`
+  display: flex;
+`;
 const navVarient = {
   top: {backgroundColor: "#1B262C"},
   scroll: {backgroundColor: "rgba(0,0,0,0.5)"},
 };
+
 const HeaderComp = () => {
   const navAnimation = useAnimation();
   const home = useMatch("/");
   const tv = useMatch("/tv");
   const search = useMatch("/search");
   const {scrollY} = useScroll();
-  const setThemeMode = useSetRecoilState(isDark);
+  const [themeMode, setThemeMode] = useRecoilState(isDark);
   useMotionValueEvent(scrollY, "change", (scrollVal) => {
     if (scrollVal > 80) {
       navAnimation.start("scroll");
@@ -113,12 +119,17 @@ const HeaderComp = () => {
           </li>
         </Navlist>
       </NavCont>
-      <ThemeBtnCont>
-        <ThemeBtn onClick={() => setThemeMode((prev) => !prev)} />
-      </ThemeBtnCont>
-      <SearchForm onSubmit={onSubmit}>
-        <SearchInput type="text" placeholder="Search Media" />
-      </SearchForm>
+      <UtilCont>
+        <ThemeBtnCont>
+          <ThemeBtn
+            onClick={() => setThemeMode((prev) => !prev)}
+            $mode={themeMode}
+          />
+        </ThemeBtnCont>
+        <SearchForm onSubmit={onSubmit}>
+          <SearchInput type="text" placeholder="Search Media" />
+        </SearchForm>
+      </UtilCont>
     </Header>
   );
 };
