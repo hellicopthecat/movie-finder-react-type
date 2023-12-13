@@ -22,7 +22,9 @@ function App() {
       <HeaderComp />
       <Routes>
         <Route index element={<Home />} />
-        <Route path="/movie/:id" element={<MovieDetail />} />
+        <Route element={<Home />}>
+          <Route path="movie/:id" element={<MovieDetail />} />
+        </Route>
         <Route path="/tv" element={<Tv />}>
           <Route path=":id" element={<TvDetail />} />
         </Route>

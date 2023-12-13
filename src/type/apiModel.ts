@@ -1,6 +1,6 @@
 interface BaseType {
   page: number;
-  total_page: 450;
+  total_page: number;
 }
 
 export interface IMovieLatest {

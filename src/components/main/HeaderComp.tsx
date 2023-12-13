@@ -9,6 +9,7 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
+import HomeSearch from "../utilcomp/HomeSearch";
 
 const Header = styled(motion.header)`
   position: fixed;
@@ -16,7 +17,7 @@ const Header = styled(motion.header)`
   top: 0;
   left: 0;
   width: 100%;
-  height: 105px;
+  height: 85px;
   padding: 20px;
   display: flex;
   justify-content: space-between;
@@ -24,37 +25,26 @@ const Header = styled(motion.header)`
   color: ${(props) => props.theme.accetTxt};
   background-color: ${(props) => props.theme.bgColor};
 `;
-const NavCont = styled.nav`
-  display: flex;
-  align-items: center;
-`;
 const LogoImg = styled.img`
-  width: 200px;
+  width: 150px;
   margin-right: 50px;
 `;
-const Navlist = styled.ul`
-  display: flex;
-  justify-content: space-around;
-  li {
-    font-size: 20px;
-    margin-right: 30px;
-  }
-`;
-const SearchForm = styled.form`
+const NavWrapper = styled.nav`
   display: flex;
   align-items: center;
-  margin-right: 20px;
 `;
-const SearchInput = styled.input`
-  margin: 0 10px;
-  padding: 5px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 15px;
-  &::placeholder {
-    color: ${(props) => props.theme.accetTxt};
-  }
+
+const NavCont = styled(motion.ul)`
+  display: flex;
+  justify-content: space-around;
 `;
-const ThemeBtnCont = styled(motion.div)`
+const NavList = styled(motion.div)`
+  position: relative;
+  font-size: 20px;
+  margin-right: 30px;
+`;
+const ThemeBtnCont = styled.div``;
+const ThemeBtnBorder = styled(motion.div)`
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -68,13 +58,14 @@ const ThemeBtn = styled(motion.button)<{$mode: boolean}>`
   width: 25px;
   height: 25px;
   border-radius: 100%;
+  transform: ${(props) => (props.$mode ? "translateX(0)" : "translateX(100%)")};
+  transition: 0.2s ease-in-out;
   background-color: ${(props) => props.theme.accetTxt};
-  transform: ${(props) =>
-    props.$mode ? "translateX(0%)" : "translateX(100%)"};
-  transition: 0.4s ease-in-out;
 `;
 const UtilCont = styled.div`
   display: flex;
+  justify-content: end;
+  align-items: center;
 `;
 const navVarient = {
   top: {backgroundColor: "#1B262C"},
@@ -84,6 +75,7 @@ const navVarient = {
 const HeaderComp = () => {
   const navAnimation = useAnimation();
   const home = useMatch("/");
+  const movie = useMatch("/movie/:id");
   const tv = useMatch("/tv");
   const search = useMatch("/search");
   const {scrollY} = useScroll();
@@ -95,40 +87,44 @@ const HeaderComp = () => {
       navAnimation.start("top");
     }
   });
-  const onSubmit = () => {};
+
   return (
     <Header initial="top" variants={navVarient} animate={navAnimation}>
-      <NavCont>
+      <NavWrapper>
         <Link to="/">
           <LogoImg
             src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png"
             alt="logo"
           />
         </Link>
-        <Navlist>
-          <li>
-            <Link to="/">HOME {home && <Circle id="navCircle" />}</Link>
-          </li>
-          <li>
-            <Link to="/tv">TV {tv && <Circle id="navCircle" />}</Link>
-          </li>
-          <li>
-            <Link to="/search">
-              Search {search && <Circle id="navCircle" />}
+        <NavCont>
+          <NavList>
+            <Link to="/">
+              MOVIE
+              {(home || movie) && <Circle layoutId="navCircle" />}
             </Link>
-          </li>
-        </Navlist>
-      </NavCont>
+          </NavList>
+          <NavList>
+            <Link to="/tv">
+              TV
+              {tv && <Circle layoutId="navCircle" />}
+            </Link>
+          </NavList>
+          <NavList>
+            <Link to="/search">
+              Search
+              {search && <Circle layoutId="navCircle" />}
+            </Link>
+          </NavList>
+        </NavCont>
+      </NavWrapper>
       <UtilCont>
         <ThemeBtnCont>
-          <ThemeBtn
-            onClick={() => setThemeMode((prev) => !prev)}
-            $mode={themeMode}
-          />
+          <ThemeBtnBorder onClick={() => setThemeMode((prev) => !prev)}>
+            <ThemeBtn $mode={themeMode} />
+          </ThemeBtnBorder>
         </ThemeBtnCont>
-        <SearchForm onSubmit={onSubmit}>
-          <SearchInput type="text" placeholder="Search Media" />
-        </SearchForm>
+        <HomeSearch />
       </UtilCont>
     </Header>
   );

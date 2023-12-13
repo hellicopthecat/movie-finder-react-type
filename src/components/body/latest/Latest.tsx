@@ -1,24 +1,26 @@
 import styled from "styled-components";
-import Poster from "../../utilcomp/Poster";
 import {Link} from "react-router-dom";
 import {imgMaker} from "../../../util/utils";
+import {AnimatePresence, motion} from "framer-motion";
+import {useState} from "react";
 
-const LatestCont = styled.div<{$path: string}>`
+const LatestCont = styled(motion.div)<{$path: string}>`
   position: relative;
-  width: 100%;
+  width: 99vw;
   height: 700px;
-  background: url(${(props) => props.$path !== null && imgMaker(props.$path)});
+  background: ${(props) =>
+    `url(${props.$path !== null && imgMaker(props.$path, "original")})`};
   background-color: ${(props) => props.$path === null && props.theme.accetTxt};
   background-size: cover;
   background-position: center center;
-  margin-bottom: 30px;
+  background-repeat: no-repeat;
 `;
 const LatestGradient = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
   background: ${(props) =>
-    `linear-gradient(transparent, ${props.theme.bgColor})`};
+    `linear-gradient(transparent 60%, ${props.theme.bgColor}) 40%`};
 `;
 const LatestTextCont = styled.div`
   position: absolute;
@@ -44,12 +46,19 @@ const LatestBtn = styled.span`
   color: ${(props) => props.theme.txtColor};
   background-color: ${(props) => props.theme.bgColor};
 `;
+const NowPlayBtnCont = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  left: 0;
+`;
 interface ILatest {
   movieID: number;
   posterPath: string;
   title: string;
   overview: string;
 }
+
 const Latest: React.FC<ILatest> = ({movieID, posterPath, title, overview}) => {
   return (
     <LatestCont $path={posterPath}>
@@ -61,7 +70,6 @@ const Latest: React.FC<ILatest> = ({movieID, posterPath, title, overview}) => {
           <LatestBtn>About Movie</LatestBtn>
         </Link>
       </LatestTextCont>
-      {/* <Poster path={posterPath} size="original" /> */}
     </LatestCont>
   );
 };

@@ -7,8 +7,8 @@ const PosterImg = styled.img<{$imgheight: string; $imgwidth: string}>`
   height: ${(props) => props.$imgheight};
 `;
 const NonPosterImg = styled.div`
-  width: 100%;
-  height: 700px;
+  width: 200px;
+  height: 250px;
   background-color: ${(props) => props.theme.accetTxt};
 `;
 interface IPoster {
@@ -25,7 +25,7 @@ const Poster: React.FC<IPoster> = ({
 }) => {
   return (
     <PosterCont>
-      {path !== null ? (
+      {path !== null || path === "" ? (
         <PosterImg
           src={imgMaker(path, size)}
           alt="PosterImg"

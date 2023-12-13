@@ -8,7 +8,7 @@ import RowSlider from "../components/body/rowComp/RowSlider";
 import ColumnComp from "../components/body/columnComp/ColumnComp";
 import {ITvLatest, ITvResponse} from "../type/apiModel";
 import {useRecoilValue, useSetRecoilState} from "recoil";
-import {sliderIndex, toggleLeaving} from "../store/atoms";
+
 import {AnimatePresence, motion} from "framer-motion";
 import SliderBtn from "../components/utilcomp/SliderBtn";
 
@@ -48,8 +48,7 @@ const sliderVariant = {
 };
 const Tv: React.FC = () => {
   const offset = 6;
-  const index = useRecoilValue(sliderIndex);
-  const setToggleLeaving = useSetRecoilState(toggleLeaving);
+
   const {data: latestData, isLoading: latestLoading} = useQuery<ITvLatest>(
     ["TV", "tvLatest"],
     tvApi.latest
@@ -87,7 +86,7 @@ const Tv: React.FC = () => {
               overview={latestData.overview}
             />
           )}
-          <ContWrapper>
+          {/* <ContWrapper>
             <Title>AIRING TODAY</Title>
             <AnimatePresence
               initial={false}
@@ -100,11 +99,11 @@ const Tv: React.FC = () => {
                 animate="visible"
                 exit="exit"
                 transition={{tyep: "tween", duration: 1}}
-                key={index}
+                key={mainIndex}
               >
                 {airingTodayData?.results
                   .slice(1)
-                  .slice(offset * index, offset * index + offset)
+                  .slice(offset * mainIndex, offset * mainIndex + offset)
                   .map((airing) => (
                     <RowSlider
                       key={airing.id}
@@ -117,11 +116,11 @@ const Tv: React.FC = () => {
                   ))}
               </RowSliderCont>
             </AnimatePresence>
-          </ContWrapper>
-          <ContWrapper>
+          </ContWrapper> */}
+          {/* <ContWrapper>
             <AnimatePresence
               initial={false}
-              onExitComplete={() => setToggleLeaving((prev) => !prev)}
+              onExitComplete={() => setSubToggleLeaving((prev) => !prev)}
             >
               <Title>TV TOP RATED</Title>
               <SliderBtn total={Number(totalTv)} />
@@ -131,24 +130,26 @@ const Tv: React.FC = () => {
                 animate="visible"
                 exit="exit"
                 transition={{tyep: "tween", duration: 1}}
-                key={index}
+                key={subIndex}
               >
                 {topRateData?.results
                   .slice(1)
-                  .slice(offset * index, offset * index + offset)
-                  .map((airing) => (
+                  .slice(offset * subIndex, offset * subIndex + offset)
+                  .map((topRate) => (
                     <RowSlider
-                      key={airing.id}
-                      movieID={airing.id}
+                      key={topRate.id}
+                      movieID={topRate.id}
                       movieTitle={
-                        airing.name !== "" ? airing.name : airing.original_name
+                        topRate.name !== ""
+                          ? topRate.name
+                          : topRate.original_name
                       }
-                      posterPath={airing.poster_path}
+                      posterPath={topRate.poster_path}
                     />
                   ))}
               </RowSliderCont>
             </AnimatePresence>
-          </ContWrapper>
+          </ContWrapper> */}
           <ContWrapper>
             <Title>UPCOMING MOVIE</Title>
             <ColumSliderCont>

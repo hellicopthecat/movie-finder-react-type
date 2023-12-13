@@ -8,6 +8,12 @@ export const movieApi = {
     fetch(`${BASE_URL}/movie/latest?api_key=${API_KEY}`)
       .then((res) => res.json())
       .catch(console.log),
+  nowPlaying: () =>
+    fetch(
+      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko&page=1&region=kr`
+    )
+      .then((res) => res.json())
+      .catch(console.log),
   topRated: () =>
     fetch(
       `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=ko&page=1&region=kr`

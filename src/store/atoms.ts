@@ -4,13 +4,15 @@ export const isDark = atom({
   key: "isDark",
   default: true,
 });
-
-export const sliderIndex = atom({
-  key: "sliderIndex",
+export const direction = atom({
+  key: "direction",
+  default: true,
+});
+export const topRateMovieIndex = atom({
+  key: "topRateMovieIndex",
   default: 0,
 });
-
-export const toggleLeaving = atom({
-  key: "toggleLeaving",
+export const topRateToggle = atom({
+  key: "topRateToggle",
   default: false,
 });
