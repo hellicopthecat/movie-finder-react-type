@@ -3,8 +3,7 @@ import App from "./App";
 import Home from "./views/Home";
 import Tv from "./views/Tv";
 import Search from "./views/Search";
-import MovieDetail from "./views/MovieDetail";
-import TvDetail from "./views/TvDetail";
+import DetailComp from "./views/DetailComp";
 import ErrorPage from "./views/ErrorPage";
 
 export const router = createBrowserRouter(
@@ -20,7 +19,7 @@ export const router = createBrowserRouter(
           children: [
             {
               path: "movie/:id",
-              element: <MovieDetail />,
+              element: <DetailComp />,
             },
           ],
         },
@@ -30,7 +29,7 @@ export const router = createBrowserRouter(
           children: [
             {
               path: ":id",
-              element: <TvDetail />,
+              element: <DetailComp />,
             },
           ],
         },

@@ -1,12 +1,17 @@
 import styled from "styled-components";
-import {Link} from "react-router-dom";
+import {useMatch, useNavigate} from "react-router-dom";
 import {imgMaker} from "../../../util/utils";
-import {AnimatePresence, motion} from "framer-motion";
-import {useState} from "react";
+import {motion} from "framer-motion";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import {
+  nowMoviePlay,
+  nowMoviePlayToggle,
+  onAirTv,
+  onAirTvToggle,
+} from "../../../store/atoms";
 
 const LatestCont = styled(motion.div)<{$path: string}>`
-  position: relative;
-  width: 99vw;
+  width: 100vw;
   height: 700px;
   background: ${(props) =>
     `url(${props.$path !== null && imgMaker(props.$path, "original")})`};
@@ -40,35 +45,71 @@ const LatestDesc = styled.p`
   font-size: 20px;
   margin-bottom: 20px;
 `;
-const LatestBtn = styled.span`
+const LatestBtn = styled(motion.span)`
+  cursor: pointer;
   display: inline-flex;
   padding: 10px 20px;
   color: ${(props) => props.theme.txtColor};
   background-color: ${(props) => props.theme.bgColor};
 `;
-const NowPlayBtnCont = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  left: 0;
+const NowPlayBtnCont = styled.div``;
+const NextSlideBtn = styled(LatestBtn)`
+  margin-left: 10px;
 `;
 interface ILatest {
-  movieID: number;
+  id: number;
   posterPath: string;
   title: string;
   overview: string;
+  contentsLength?: number;
+  type?: "MOVIE" | "TV";
 }
 
-const Latest: React.FC<ILatest> = ({movieID, posterPath, title, overview}) => {
+const Latest: React.FC<ILatest> = ({
+  id,
+  posterPath,
+  title,
+  overview,
+  contentsLength,
+  type,
+}) => {
+  const setNowPlayMovie = useSetRecoilState(nowMoviePlay);
+  const setOnAirTv = useSetRecoilState(onAirTv);
+  const [nowPlayToggle, setNowPlayToggle] = useRecoilState(nowMoviePlayToggle);
+  const [nowOnAirToggle, setNowOnAirToggle] = useRecoilState(onAirTvToggle);
+  const navigate = useNavigate();
+  const movie = useMatch("/");
+  const tv = useMatch("/tv");
+  const goToPage = () => {
+    if (movie) {
+      navigate(`/movie/${id}`);
+    }
+    if (tv) {
+      navigate(`/tv/${id}`);
+    }
+  };
+  const nextItem = () => {
+    if (type === "MOVIE") {
+      if (nowPlayToggle) return;
+      setNowPlayToggle((prev) => !prev);
+      setNowPlayMovie((prev) => (prev === contentsLength ? 0 : prev + 1));
+    }
+    if (type === "TV") {
+      if (nowOnAirToggle) return;
+      setNowOnAirToggle((prev) => !prev);
+      setOnAirTv((prev) => (prev === contentsLength ? 0 : prev + 1));
+    }
+  };
   return (
     <LatestCont $path={posterPath}>
       <LatestGradient />
       <LatestTextCont>
         <LatestTitle>{title}</LatestTitle>
         <LatestDesc>{overview}</LatestDesc>
-        <Link to={`movie/${movieID}`}>
-          <LatestBtn>About Movie</LatestBtn>
-        </Link>
+        <NowPlayBtnCont>
+          <LatestBtn onClick={goToPage}>About Movie</LatestBtn>
+          <NextSlideBtn onClick={nextItem}>Next</NextSlideBtn>
+        </NowPlayBtnCont>
       </LatestTextCont>
     </LatestCont>
   );

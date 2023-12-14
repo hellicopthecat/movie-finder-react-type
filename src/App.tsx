@@ -1,14 +1,14 @@
-import styled, {ThemeProvider} from "styled-components";
+import {ThemeProvider} from "styled-components";
 import {GlobalStyle} from "./theme/GlobalStyle";
 import {useRecoilValue} from "recoil";
 import {isDark} from "./store/atoms";
 import {darkTheme, lightTheme} from "./theme/theme";
-import {HashRouter, Outlet, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import HeaderComp from "./components/main/HeaderComp";
 import Home from "./views/Home";
-import MovieDetail from "./views/MovieDetail";
+import DetailComp from "./views/DetailComp";
 import Tv from "./views/Tv";
-import TvDetail from "./views/TvDetail";
+
 import Search from "./views/Search";
 import ErrorPage from "./views/ErrorPage";
 // const Wrapper = styled.div`
@@ -23,10 +23,10 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route element={<Home />}>
-          <Route path="movie/:id" element={<MovieDetail />} />
+          <Route path="movie/:id" element={<DetailComp />} />
         </Route>
         <Route path="/tv" element={<Tv />}>
-          <Route path=":id" element={<TvDetail />} />
+          <Route path=":id" element={<DetailComp />} />
         </Route>
         <Route path="/search" element={<Search />} />
 

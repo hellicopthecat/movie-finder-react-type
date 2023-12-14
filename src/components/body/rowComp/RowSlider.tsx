@@ -62,6 +62,7 @@ const RowSlider: React.FC<IRowSlider> = ({movieID, movieTitle, posterPath}) => {
       initial="base"
       whileHover="hover"
       $path={imgMaker(posterPath)}
+      layoutId={movieID + ""}
     >
       <TxtCont
         variants={txtVariant}

@@ -11,30 +11,71 @@ import {useRecoilValue, useSetRecoilState} from "recoil";
 
 import {AnimatePresence, motion} from "framer-motion";
 import SliderBtn from "../components/utilcomp/SliderBtn";
+import {
+  airingToday,
+  airingTodayToggle,
+  onAirTv,
+  onAirTvToggle,
+} from "../store/atoms";
+import {useMatch} from "react-router-dom";
+
+import DetailComp from "./DetailComp";
 
 const TvCont = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-top: 85px;
+`;
+const OnAirWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 700px;
+  overflow: hidden;
+`;
+const OnAirCont = styled(motion.div)`
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
 `;
 const ContWrapper = styled.div`
   position: relative;
-  margin-bottom: 350px;
 `;
-const RowSliderCont = styled(motion.div)`
+const RowSliderCont = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const RowCont = styled(motion.div)`
   display: grid;
   grid-auto-flow: column;
   position: absolute;
   width: 100%;
-  margin-bottom: 50px;
+`;
+const RowSlideHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 const Title = styled.h2`
   font-size: 30px;
   font-weight: 600;
-  margin-bottom: 20px;
 `;
 const ColumSliderCont = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 `;
+
+const TvDetailCont = styled(motion.div)``;
+const onAirVariant = {
+  hidden: {
+    x: window.outerWidth,
+  },
+  visible: {
+    x: 0,
+  },
+  exit: {
+    x: -window.outerWidth,
+  },
+};
 const sliderVariant = {
   hidden: {
     x: window.outerWidth + 10,
@@ -47,12 +88,9 @@ const sliderVariant = {
   },
 };
 const Tv: React.FC = () => {
-  const offset = 6;
-
-  const {data: latestData, isLoading: latestLoading} = useQuery<ITvLatest>(
-    ["TV", "tvLatest"],
-    tvApi.latest
-  );
+  //API DATA
+  const {data: onTheAirData, isLoading: onTheAirLoading} =
+    useQuery<ITvResponse>(["TV", "tvOntheAir"], tvApi.onTheAir);
   const {data: airingTodayData, isLoading: airingTodayLoading} =
     useQuery<ITvResponse>(["TV", "tvAiring"], tvApi.airingToday);
   const {data: popularData, isLoading: popularLoading} = useQuery<ITvResponse>(
@@ -63,60 +101,93 @@ const Tv: React.FC = () => {
     ["TV", "tvTopRate"],
     tvApi.topRated
   );
-
+  //Variable
+  const tvDetailMatch = useMatch("/tv/:id");
   const isLoading =
-    latestLoading || airingTodayLoading || popularLoading || topRateLoading;
+    onTheAirLoading || airingTodayLoading || popularLoading || topRateLoading;
+  const nowOnAirLengh = onTheAirData && onTheAirData.results.length - 1;
   const totalAiring = airingTodayData && airingTodayData?.results.length - 1;
   const totalTv = topRateData && topRateData?.results.length - 1;
+  const clickTvDetail = tvDetailMatch?.params.id;
+
+  //States
+  const nowOnTvAir = useRecoilValue(onAirTv);
+  const airing = useRecoilValue(airingToday);
+  const setOnAirTvToggle = useSetRecoilState(onAirTvToggle);
+  const setAiringToggle = useSetRecoilState(airingTodayToggle);
+  const offset = 6;
   return (
     <TvCont>
       {isLoading ? (
         <Loading />
       ) : (
         <>
-          {latestData && (
-            <Latest
-              movieID={latestData.id}
-              title={
-                latestData.name !== ""
-                  ? latestData.name
-                  : latestData.original_name
-              }
-              posterPath={latestData.poster_path}
-              overview={latestData.overview}
-            />
-          )}
-          {/* <ContWrapper>
-            <Title>AIRING TODAY</Title>
+          <OnAirWrapper>
             <AnimatePresence
               initial={false}
-              onExitComplete={() => setToggleLeaving((prev) => !prev)}
+              onExitComplete={() => setOnAirTvToggle((prev) => !prev)}
             >
-              <SliderBtn total={Number(totalAiring)} />
-              <RowSliderCont
-                variants={sliderVariant}
+              <OnAirCont
+                variants={onAirVariant}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                transition={{tyep: "tween", duration: 1}}
-                key={mainIndex}
+                transition={{type: "tween", duration: 1}}
+                key={nowOnTvAir}
               >
-                {airingTodayData?.results
-                  .slice(1)
-                  .slice(offset * mainIndex, offset * mainIndex + offset)
-                  .map((airing) => (
-                    <RowSlider
-                      key={airing.id}
-                      movieID={airing.id}
-                      movieTitle={
-                        airing.name !== "" ? airing.name : airing.original_name
-                      }
-                      posterPath={airing.poster_path}
+                {onTheAirData?.results.map((tv, index) =>
+                  nowOnTvAir === index ? (
+                    <Latest
+                      key={tv.id + tv.name}
+                      id={tv.id}
+                      title={tv.name !== "" ? tv.name : tv.original_name}
+                      posterPath={tv.backdrop_path}
+                      overview={tv.overview}
+                      contentsLength={Number(nowOnAirLengh)}
+                      type="TV"
                     />
-                  ))}
-              </RowSliderCont>
+                  ) : null
+                )}
+              </OnAirCont>
             </AnimatePresence>
-          </ContWrapper> */}
+          </OnAirWrapper>
+          <ContWrapper>
+            <RowSliderCont>
+              <RowSlideHeader>
+                <Title>AIRING TODAY</Title>
+                <SliderBtn total={Number(totalAiring)} toggleKey="airing" />
+              </RowSlideHeader>
+              <AnimatePresence
+                initial={false}
+                onExitComplete={() => setAiringToggle((prev) => !prev)}
+              >
+                <RowCont
+                  variants={sliderVariant}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  transition={{tyep: "tween", duration: 1}}
+                  key={airing}
+                >
+                  {airingTodayData?.results
+                    .slice(1)
+                    .slice(offset * airing, offset * airing + offset)
+                    .map((airing) => (
+                      <RowSlider
+                        key={airing.id}
+                        movieID={airing.id}
+                        movieTitle={
+                          airing.name !== ""
+                            ? airing.name
+                            : airing.original_name
+                        }
+                        posterPath={airing.poster_path}
+                      />
+                    ))}
+                </RowCont>
+              </AnimatePresence>
+            </RowSliderCont>
+          </ContWrapper>
           {/* <ContWrapper>
             <AnimatePresence
               initial={false}
@@ -124,7 +195,7 @@ const Tv: React.FC = () => {
             >
               <Title>TV TOP RATED</Title>
               <SliderBtn total={Number(totalTv)} />
-              <RowSliderCont
+              <RowCont
                 variants={sliderVariant}
                 initial="hidden"
                 animate="visible"
@@ -147,10 +218,10 @@ const Tv: React.FC = () => {
                       posterPath={topRate.poster_path}
                     />
                   ))}
-              </RowSliderCont>
+              </RowCont>
             </AnimatePresence>
           </ContWrapper> */}
-          <ContWrapper>
+          {/* <ContWrapper>
             <Title>UPCOMING MOVIE</Title>
             <ColumSliderCont>
               {popularData?.results.map((popular) => (
@@ -166,7 +237,14 @@ const Tv: React.FC = () => {
                 />
               ))}
             </ColumSliderCont>
-          </ContWrapper>
+          </ContWrapper> */}
+          <AnimatePresence>
+            {clickTvDetail && (
+              <TvDetailCont layoutId={tvDetailMatch.params.id}>
+                <DetailComp id={tvDetailMatch.params.id} />
+              </TvDetailCont>
+            )}
+          </AnimatePresence>
         </>
       )}
     </TvCont>

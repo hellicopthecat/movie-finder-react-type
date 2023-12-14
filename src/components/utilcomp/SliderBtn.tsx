@@ -1,12 +1,14 @@
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import styled from "styled-components";
-import {direction, topRateMovieIndex, topRateToggle} from "../../store/atoms";
+import {
+  airingToday,
+  airingTodayToggle,
+  direction,
+  topRateMovieIndex,
+  topRateToggle,
+} from "../../store/atoms";
 
 const BtnCont = styled.div`
-  /* width: 100%;
-  height: 100px;
-  position: absolute;
-  top: 500%; */
   display: flex;
   justify-content: space-between;
 `;
@@ -19,12 +21,15 @@ interface ISliderBtn {
 }
 const SliderBtn: React.FC<ISliderBtn> = ({total, toggleKey}) => {
   //states
+  const [airingToggle, setAiringTodayToggle] =
+    useRecoilState(airingTodayToggle);
   const [topRateMovieToggle, setTopRateMovieToggle] =
     useRecoilState(topRateToggle);
+  const setAiringToday = useSetRecoilState(airingToday);
   const setTopRateMovieIndex = useSetRecoilState(topRateMovieIndex);
   const setDirection = useSetRecoilState(direction);
   //variables
-  const toggle = topRateMovieToggle;
+  const toggle = topRateMovieToggle || airingToggle;
   const offset = 6;
   const maxIndex = Math.floor(total / offset) - 1;
   //function
@@ -35,6 +40,11 @@ const SliderBtn: React.FC<ISliderBtn> = ({total, toggleKey}) => {
       setDirection(false);
       setTopRateMovieIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
     }
+    if (toggleKey === "airing") {
+      setAiringTodayToggle((prev) => !prev);
+      setDirection(false);
+      setAiringToday((prev) => (prev === 0 ? maxIndex : prev - 1));
+    }
   };
   const increase = () => {
     if (toggle) return;
@@ -42,6 +52,11 @@ const SliderBtn: React.FC<ISliderBtn> = ({total, toggleKey}) => {
       setTopRateMovieToggle((prev) => !prev);
       setDirection(true);
       setTopRateMovieIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+    if (toggleKey === "airing") {
+      setAiringTodayToggle((prev) => !prev);
+      setDirection(true);
+      setAiringToday((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
 

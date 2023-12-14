@@ -77,6 +77,7 @@ const HeaderComp = () => {
   const home = useMatch("/");
   const movie = useMatch("/movie/:id");
   const tv = useMatch("/tv");
+  const tvDetail = useMatch("/tv/:id");
   const search = useMatch("/search");
   const {scrollY} = useScroll();
   const [themeMode, setThemeMode] = useRecoilState(isDark);
@@ -107,7 +108,7 @@ const HeaderComp = () => {
           <NavList>
             <Link to="/tv">
               TV
-              {tv && <Circle layoutId="navCircle" />}
+              {(tv || tvDetail) && <Circle layoutId="navCircle" />}
             </Link>
           </NavList>
           <NavList>
