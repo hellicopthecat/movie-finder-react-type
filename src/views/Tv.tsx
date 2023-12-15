@@ -6,7 +6,7 @@ import {useQuery} from "react-query";
 
 import RowSlider from "../components/body/rowComp/RowSlider";
 import ColumnComp from "../components/body/columnComp/ColumnComp";
-import {ITvLatest, ITvResponse} from "../type/apiModel";
+import {ITvResponse} from "../type/apiModel";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 
 import {AnimatePresence, motion} from "framer-motion";
@@ -16,8 +16,10 @@ import {
   airingTodayToggle,
   onAirTv,
   onAirTvToggle,
+  topTvIndex,
+  topTvToggle,
 } from "../store/atoms";
-import {useMatch} from "react-router-dom";
+import {Link, useMatch} from "react-router-dom";
 
 import DetailComp from "./DetailComp";
 
@@ -31,6 +33,7 @@ const OnAirWrapper = styled.div`
   width: 100%;
   height: 700px;
   overflow: hidden;
+  margin-bottom: 30px;
 `;
 const OnAirCont = styled(motion.div)`
   position: absolute;
@@ -39,16 +42,23 @@ const OnAirCont = styled(motion.div)`
 `;
 const ContWrapper = styled.div`
   position: relative;
-`;
-const RowSliderCont = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const RowSliderCont = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  margin-bottom: 30px;
+`;
 const RowCont = styled(motion.div)`
+  margin-top: 30px;
   display: grid;
   grid-auto-flow: column;
-  position: absolute;
   width: 100%;
+  position: absolute;
+  top: 20px;
 `;
 const RowSlideHeader = styled.div`
   display: flex;
@@ -59,10 +69,15 @@ const Title = styled.h2`
   font-size: 30px;
   font-weight: 600;
 `;
-const ColumSliderCont = styled.ul`
+const ColumnWrapper = styled.div``;
+const ColumnHeader = styled.div`
+  margin-bottom: 20px;
+`;
+const ColumCont = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 `;
+const LayoutCont = styled(motion.div)``;
 
 const TvDetailCont = styled(motion.div)``;
 const onAirVariant = {
@@ -113,8 +128,10 @@ const Tv: React.FC = () => {
   //States
   const nowOnTvAir = useRecoilValue(onAirTv);
   const airing = useRecoilValue(airingToday);
+  const topTv = useRecoilValue(topTvIndex);
   const setOnAirTvToggle = useSetRecoilState(onAirTvToggle);
   const setAiringToggle = useSetRecoilState(airingTodayToggle);
+  const setTopTvToggle = useSetRecoilState(topTvToggle);
   const offset = 6;
   return (
     <TvCont>
@@ -137,15 +154,16 @@ const Tv: React.FC = () => {
               >
                 {onTheAirData?.results.map((tv, index) =>
                   nowOnTvAir === index ? (
-                    <Latest
-                      key={tv.id + tv.name}
-                      id={tv.id}
-                      title={tv.name !== "" ? tv.name : tv.original_name}
-                      posterPath={tv.backdrop_path}
-                      overview={tv.overview}
-                      contentsLength={Number(nowOnAirLengh)}
-                      type="TV"
-                    />
+                    <LayoutCont layoutId={tv.id + ""} key={tv.id + tv.name}>
+                      <Latest
+                        id={tv.id}
+                        title={tv.name !== "" ? tv.name : tv.original_name}
+                        posterPath={tv.backdrop_path}
+                        overview={tv.overview}
+                        contentsLength={Number(nowOnAirLengh)}
+                        type="TV"
+                      />
+                    </LayoutCont>
                   ) : null
                 )}
               </OnAirCont>
@@ -173,71 +191,94 @@ const Tv: React.FC = () => {
                     .slice(1)
                     .slice(offset * airing, offset * airing + offset)
                     .map((airing) => (
-                      <RowSlider
-                        key={airing.id}
-                        movieID={airing.id}
-                        movieTitle={
-                          airing.name !== ""
-                            ? airing.name
-                            : airing.original_name
-                        }
-                        posterPath={airing.poster_path}
-                      />
+                      <LayoutCont
+                        key={airing.id + airing.name}
+                        layoutId={airing.id + ""}
+                      >
+                        <RowSlider
+                          movieID={airing.id}
+                          movieTitle={
+                            airing.name !== ""
+                              ? airing.name
+                              : airing.original_name
+                          }
+                          posterPath={airing.poster_path}
+                        />
+                      </LayoutCont>
                     ))}
                 </RowCont>
               </AnimatePresence>
             </RowSliderCont>
-          </ContWrapper>
-          {/* <ContWrapper>
-            <AnimatePresence
-              initial={false}
-              onExitComplete={() => setSubToggleLeaving((prev) => !prev)}
-            >
-              <Title>TV TOP RATED</Title>
-              <SliderBtn total={Number(totalTv)} />
-              <RowCont
-                variants={sliderVariant}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{tyep: "tween", duration: 1}}
-                key={subIndex}
+            <RowSliderCont>
+              <RowSlideHeader>
+                <Title>TV TOP RATED</Title>
+                <SliderBtn total={Number(totalTv)} toggleKey="TOPTV" />
+              </RowSlideHeader>
+              <AnimatePresence
+                initial={false}
+                onExitComplete={() => setTopTvToggle((prev) => !prev)}
               >
-                {topRateData?.results
-                  .slice(1)
-                  .slice(offset * subIndex, offset * subIndex + offset)
-                  .map((topRate) => (
-                    <RowSlider
-                      key={topRate.id}
-                      movieID={topRate.id}
-                      movieTitle={
-                        topRate.name !== ""
-                          ? topRate.name
-                          : topRate.original_name
-                      }
-                      posterPath={topRate.poster_path}
-                    />
-                  ))}
-              </RowCont>
-            </AnimatePresence>
-          </ContWrapper> */}
-          {/* <ContWrapper>
-            <Title>UPCOMING MOVIE</Title>
-            <ColumSliderCont>
-              {popularData?.results.map((popular) => (
-                <ColumnComp
-                  key={popular.id}
-                  movieID={popular.id}
-                  movieTitle={
-                    popular.name !== "" ? popular.name : popular.original_name
-                  }
-                  voteAverage={popular.vote_average}
-                  posterPath={popular.poster_path}
-                  overview={popular.overview}
-                />
-              ))}
-            </ColumSliderCont>
-          </ContWrapper> */}
+                <RowCont
+                  variants={sliderVariant}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  transition={{tyep: "tween", duration: 1}}
+                  key={topTv}
+                >
+                  {topRateData?.results
+                    .slice(1)
+                    .slice(offset * topTv, offset * topTv + offset)
+                    .map((topRate) => (
+                      <LayoutCont
+                        key={topRate.id + topRate.name}
+                        layoutId={topRate.id + ""}
+                      >
+                        <RowSlider
+                          movieID={topRate.id}
+                          movieTitle={
+                            topRate.name !== ""
+                              ? topRate.name
+                              : topRate.original_name
+                          }
+                          posterPath={topRate.poster_path}
+                        />
+                      </LayoutCont>
+                    ))}
+                </RowCont>
+              </AnimatePresence>
+            </RowSliderCont>
+            <ColumnWrapper>
+              <ColumnHeader>
+                <Title>UPCOMING MOVIE</Title>
+              </ColumnHeader>
+              <ColumCont>
+                {popularData?.results.map((popular) => (
+                  <AnimatePresence>
+                    <LayoutCont
+                      key={popular.id + popular.name}
+                      layoutId={popular.id + ""}
+                    >
+                      <Link to={`/tv/${popular.id}`}>
+                        <ColumnComp
+                          movieID={popular.id}
+                          movieTitle={
+                            popular.name !== ""
+                              ? popular.name
+                              : popular.original_name
+                          }
+                          voteAverage={popular.vote_average}
+                          posterPath={popular.poster_path}
+                          overview={popular.overview}
+                        />
+                      </Link>
+                    </LayoutCont>
+                  </AnimatePresence>
+                ))}
+              </ColumCont>
+            </ColumnWrapper>
+          </ContWrapper>
+
           <AnimatePresence>
             {clickTvDetail && (
               <TvDetailCont layoutId={tvDetailMatch.params.id}>

@@ -16,7 +16,7 @@ import {
   nowMoviePlay,
   nowMoviePlayToggle,
   topRateMovieIndex,
-  topRateToggle,
+  topRateMovieToggle,
 } from "../store/atoms";
 import DetailComp from "./DetailComp";
 
@@ -42,30 +42,35 @@ const MovieContWrapper = styled.div`
   padding: 30px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const RowSliderCont = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 350px;
 `;
 const RowSliderHeader = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 const RowCont = styled(motion.div)`
-  margin-top: 20px;
+  margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   width: 100%;
-  top: 50px;
+  position: absolute;
+  top: 20px;
 `;
 const Title = styled.h2`
   font-size: 30px;
   font-weight: 800;
 `;
 const UpcomingWrapper = styled.div`
+  position: relative;
   margin-top: 60px;
 `;
 const UpcomingCont = styled.div`
@@ -122,7 +127,7 @@ const Home: React.FC = () => {
   const setNowPlayToggle = useSetRecoilState(nowMoviePlayToggle);
   const topRateMovie = useRecoilValue(topRateMovieIndex);
   const direct = useRecoilValue(direction);
-  const setTopRateToogle = useSetRecoilState(topRateToggle);
+  const setTopRateMovieToogle = useSetRecoilState(topRateMovieToggle);
   const offset = 6;
   return (
     <HomeCont>
@@ -174,10 +179,9 @@ const Home: React.FC = () => {
               </RowSliderHeader>
               <AnimatePresence
                 initial={false}
-                onExitComplete={() => setTopRateToogle((prev) => !prev)}
+                onExitComplete={() => setTopRateMovieToogle((prev) => !prev)}
               >
                 <RowCont
-                  custom={direct}
                   variants={sliderVariant}
                   initial="hidden"
                   animate="visible"
@@ -207,30 +211,28 @@ const Home: React.FC = () => {
             <UpcomingWrapper>
               <Title>UPCOMING</Title>
               <UpcomingCont>
-                <AnimatePresence>
-                  {upcomingData?.results.map((upcome) => (
-                    <>
-                      <ColumnSliderCont
-                        key={upcome.id + upcome.original_title}
-                        layoutId={upcome.id + ""}
-                      >
-                        <Link to={`movie/${upcome.id}`}>
-                          <ColumnComp
-                            movieID={upcome.id}
-                            movieTitle={
-                              upcome.title !== ""
-                                ? upcome.title
-                                : upcome.original_title
-                            }
-                            voteAverage={upcome.vote_average}
-                            posterPath={upcome.poster_path}
-                            overview={upcome.overview}
-                          />
-                        </Link>
-                      </ColumnSliderCont>
-                    </>
-                  ))}
-                </AnimatePresence>
+                {upcomingData?.results.map((upcome) => (
+                  <AnimatePresence>
+                    <ColumnSliderCont
+                      key={upcome.id + upcome.original_title}
+                      layoutId={upcome.id + ""}
+                    >
+                      <Link to={`movie/${upcome.id}`}>
+                        <ColumnComp
+                          movieID={upcome.id}
+                          movieTitle={
+                            upcome.title !== ""
+                              ? upcome.title
+                              : upcome.original_title
+                          }
+                          voteAverage={upcome.vote_average}
+                          posterPath={upcome.poster_path}
+                          overview={upcome.overview}
+                        />
+                      </Link>
+                    </ColumnSliderCont>
+                  </AnimatePresence>
+                ))}
               </UpcomingCont>
             </UpcomingWrapper>
           </MovieContWrapper>

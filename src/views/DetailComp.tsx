@@ -10,7 +10,9 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 const DetailCont = styled(motion.div)`
-  position: absolute;
+  z-index: 99;
+  position: fixed;
+  top: 200px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -43,7 +45,7 @@ const DetailComp: React.FC<IContentID> = ({id}) => {
   return (
     <>
       <Overlay onClick={backHome} />
-      <DetailCont style={{top: scrollY + "100"}}>
+      <DetailCont>
         <DetailInfo>
           <DetailTitle>hihihii</DetailTitle>
           <OverView></OverView>

@@ -1,5 +1,6 @@
 import {motion} from "framer-motion";
 import {useState} from "react";
+
 import styled from "styled-components";
 
 const SearchForm = styled(motion.form)`
@@ -25,7 +26,8 @@ const SearchInput = styled(motion.input)`
 `;
 const HomeSearch = () => {
   const [isActive, setActive] = useState(false);
-  const onClick = () => {
+
+  const onClick = async () => {
     setActive((prev) => !prev);
   };
   const onSubmit = () => {};

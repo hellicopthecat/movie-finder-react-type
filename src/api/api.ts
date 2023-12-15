@@ -21,7 +21,7 @@ export const movieApi = {
       .then((res) => res.json())
       .catch(console.log),
   search: async ({queryKey}: any) => {
-    const [_, query] = queryKey;
+    const [, , query] = queryKey;
     return await fetch(
       `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=ko&page=1&region=kr`
     )
@@ -51,7 +51,7 @@ export const tvApi = {
       .then((res) => res.json())
       .catch(console.log),
   search: async ({queryKey}: any) => {
-    const [_, query] = queryKey;
+    const [, , query] = queryKey;
     return await fetch(
       `${BASE_URL}/search/tv?api_key=${API_KEY}&query=${query}&language=ko&page=1&region=kr`
     )

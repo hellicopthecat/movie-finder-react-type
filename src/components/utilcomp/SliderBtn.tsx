@@ -5,7 +5,7 @@ import {
   airingTodayToggle,
   direction,
   topRateMovieIndex,
-  topRateToggle,
+  topRateMovieToggle,
 } from "../../store/atoms";
 
 const BtnCont = styled.div`
@@ -23,13 +23,13 @@ const SliderBtn: React.FC<ISliderBtn> = ({total, toggleKey}) => {
   //states
   const [airingToggle, setAiringTodayToggle] =
     useRecoilState(airingTodayToggle);
-  const [topRateMovieToggle, setTopRateMovieToggle] =
-    useRecoilState(topRateToggle);
+  const [topMoiveToggle, setTopRateMovieToggle] =
+    useRecoilState(topRateMovieToggle);
   const setAiringToday = useSetRecoilState(airingToday);
   const setTopRateMovieIndex = useSetRecoilState(topRateMovieIndex);
   const setDirection = useSetRecoilState(direction);
   //variables
-  const toggle = topRateMovieToggle || airingToggle;
+  const toggle = topMoiveToggle || airingToggle;
   const offset = 6;
   const maxIndex = Math.floor(total / offset) - 1;
   //function

@@ -37,7 +37,15 @@ export const topRateMovieIndex = atom({
   key: "topRateMovieIndex",
   default: 0,
 });
-export const topRateToggle = atom({
+export const topRateMovieToggle = atom({
   key: "topRateToggle",
+  default: false,
+});
+export const topTvIndex = atom({
+  key: "topRateTvIndex",
+  default: 0,
+});
+export const topTvToggle = atom({
+  key: "topRateTvToggle",
   default: false,
 });
