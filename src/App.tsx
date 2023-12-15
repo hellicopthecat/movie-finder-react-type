@@ -28,7 +28,9 @@ function App() {
         <Route path="/tv" element={<Tv />}>
           <Route path=":id" element={<DetailComp />} />
         </Route>
-        <Route path="/search" element={<Search />} />
+        <Route path="/search" element={<Search />}>
+          <Route path=":id" element={<DetailComp />} />
+        </Route>
 
         <Route path="/*" element={<ErrorPage />} />
       </Routes>

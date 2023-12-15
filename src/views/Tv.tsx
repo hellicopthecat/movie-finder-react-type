@@ -191,20 +191,16 @@ const Tv: React.FC = () => {
                     .slice(1)
                     .slice(offset * airing, offset * airing + offset)
                     .map((airing) => (
-                      <LayoutCont
+                      <RowSlider
                         key={airing.id + airing.name}
-                        layoutId={airing.id + ""}
-                      >
-                        <RowSlider
-                          movieID={airing.id}
-                          movieTitle={
-                            airing.name !== ""
-                              ? airing.name
-                              : airing.original_name
-                          }
-                          posterPath={airing.poster_path}
-                        />
-                      </LayoutCont>
+                        id={airing.id}
+                        movieTitle={
+                          airing.name !== ""
+                            ? airing.name
+                            : airing.original_name
+                        }
+                        posterPath={airing.poster_path}
+                      />
                     ))}
                 </RowCont>
               </AnimatePresence>
@@ -230,20 +226,16 @@ const Tv: React.FC = () => {
                     .slice(1)
                     .slice(offset * topTv, offset * topTv + offset)
                     .map((topRate) => (
-                      <LayoutCont
+                      <RowSlider
                         key={topRate.id + topRate.name}
-                        layoutId={topRate.id + ""}
-                      >
-                        <RowSlider
-                          movieID={topRate.id}
-                          movieTitle={
-                            topRate.name !== ""
-                              ? topRate.name
-                              : topRate.original_name
-                          }
-                          posterPath={topRate.poster_path}
-                        />
-                      </LayoutCont>
+                        id={topRate.id}
+                        movieTitle={
+                          topRate.name !== ""
+                            ? topRate.name
+                            : topRate.original_name
+                        }
+                        posterPath={topRate.poster_path}
+                      />
                     ))}
                 </RowCont>
               </AnimatePresence>
@@ -252,30 +244,26 @@ const Tv: React.FC = () => {
               <ColumnHeader>
                 <Title>UPCOMING MOVIE</Title>
               </ColumnHeader>
-              <ColumCont>
-                {popularData?.results.map((popular) => (
-                  <AnimatePresence>
-                    <LayoutCont
-                      key={popular.id + popular.name}
-                      layoutId={popular.id + ""}
-                    >
-                      <Link to={`/tv/${popular.id}`}>
-                        <ColumnComp
-                          movieID={popular.id}
-                          movieTitle={
-                            popular.name !== ""
-                              ? popular.name
-                              : popular.original_name
-                          }
-                          voteAverage={popular.vote_average}
-                          posterPath={popular.poster_path}
-                          overview={popular.overview}
-                        />
-                      </Link>
-                    </LayoutCont>
-                  </AnimatePresence>
-                ))}
-              </ColumCont>
+              <AnimatePresence>
+                <ColumCont>
+                  {popularData?.results.map((popular) => (
+                    <Link to={`/tv/${popular.id}`}>
+                      <ColumnComp
+                        key={popular.id + popular.name}
+                        movieID={popular.id}
+                        movieTitle={
+                          popular.name !== ""
+                            ? popular.name
+                            : popular.original_name
+                        }
+                        voteAverage={popular.vote_average}
+                        posterPath={popular.poster_path}
+                        overview={popular.overview}
+                      />
+                    </Link>
+                  ))}
+                </ColumCont>
+              </AnimatePresence>
             </ColumnWrapper>
           </ContWrapper>
 

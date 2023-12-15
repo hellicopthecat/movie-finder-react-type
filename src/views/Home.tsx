@@ -12,7 +12,6 @@ import {AnimatePresence, motion} from "framer-motion";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 
 import {
-  direction,
   nowMoviePlay,
   nowMoviePlayToggle,
   topRateMovieIndex,
@@ -126,7 +125,6 @@ const Home: React.FC = () => {
   const nowPlayMovie = useRecoilValue(nowMoviePlay);
   const setNowPlayToggle = useSetRecoilState(nowMoviePlayToggle);
   const topRateMovie = useRecoilValue(topRateMovieIndex);
-  const direct = useRecoilValue(direction);
   const setTopRateMovieToogle = useSetRecoilState(topRateMovieToggle);
   const offset = 6;
   return (
@@ -198,7 +196,7 @@ const Home: React.FC = () => {
                     .map((rate) => (
                       <RowSlider
                         key={rate.id}
-                        movieID={rate.id}
+                        id={rate.id}
                         movieTitle={
                           rate.title !== "" ? rate.title : rate.original_title
                         }

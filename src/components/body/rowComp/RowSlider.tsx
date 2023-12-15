@@ -41,7 +41,7 @@ const RowSliderTitle = styled.h2`
   text-align: center;
 `;
 interface IRowSlider {
-  movieID: number;
+  id: number;
   movieTitle: string;
   posterPath: string;
 }
@@ -54,15 +54,17 @@ const txtVariant = {
   hover: {opacity: 1},
   exit: {opacity: 0},
 };
-const RowSlider: React.FC<IRowSlider> = ({movieID, movieTitle, posterPath}) => {
-  const movie = useMatch("/");
+const RowSlider: React.FC<IRowSlider> = ({id, movieTitle, posterPath}) => {
+  const movieMatch = useMatch("/");
+  const tvMatch = useMatch("/tv");
+
   return (
     <SliderCont
       variants={sliderVariant}
       initial="base"
       whileHover="hover"
       $path={imgMaker(posterPath)}
-      layoutId={movieID + ""}
+      layoutId={id + ""}
     >
       <TxtCont
         variants={txtVariant}
@@ -70,7 +72,15 @@ const RowSlider: React.FC<IRowSlider> = ({movieID, movieTitle, posterPath}) => {
         whileHover="hover"
         exit="exit"
       >
-        <Link to={movie ? `movie/${movieID + ""}` : `/tv/${movieID}`}>
+        <Link
+          to={
+            movieMatch
+              ? `movie/${id + ""}`
+              : tvMatch
+              ? `/tv/${id + ""}`
+              : `/search/${id + ""}`
+          }
+        >
           <RowSliderTitle>{movieTitle}</RowSliderTitle>
         </Link>
       </TxtCont>

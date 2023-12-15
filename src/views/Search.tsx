@@ -5,6 +5,9 @@ import {movieApi, tvApi} from "../api/api";
 import Loading from "../components/utilcomp/Loading";
 import {IMovieResults, ITvResponse} from "../type/apiModel";
 import ColumnComp from "../components/body/columnComp/ColumnComp";
+import {Link, useParams} from "react-router-dom";
+import {AnimatePresence, motion} from "framer-motion";
+import DetailComp from "./DetailComp";
 
 const PageWrapper = styled.div`
   margin-top: 90px;
@@ -53,9 +56,11 @@ const ResultTitle = styled.h2`
   font-size: 30px;
   font-weight: 700;
 `;
+const SearchDetail = styled(motion.div)``;
 const Search = () => {
   const {register, watch} = useForm<IInputs>();
   const searchTxt = watch("searchInput");
+  //Api data
   const {data: movieData, isLoading: movieIsLoading} = useQuery<IMovieResults>(
     ["MOVIE", "searchMovie", searchTxt],
     movieApi.search
@@ -64,6 +69,8 @@ const Search = () => {
     ["TV", "searchTv", searchTxt],
     tvApi.search
   );
+  const {id} = useParams();
+
   const isLoading = movieIsLoading || tvIsLoading;
   return (
     <PageWrapper>
@@ -89,14 +96,18 @@ const Search = () => {
                 <ResultTitle>영화 검색 결과</ResultTitle>
                 <ResultCont>
                   {movieData?.results.map((movie) => (
-                    <ColumnComp
-                      key={movie.id + movie.original_title}
-                      movieID={movie.id}
-                      movieTitle={movie.title}
-                      overview={movie.overview}
-                      posterPath={movie.poster_path}
-                      voteAverage={movie.vote_average}
-                    />
+                    <Link to={`/search/${movie.id}`}>
+                      <SearchDetail layoutId={movie.id + ""}>
+                        <ColumnComp
+                          key={movie.id + movie.original_title}
+                          movieID={movie.id}
+                          movieTitle={movie.title}
+                          overview={movie.overview}
+                          posterPath={movie.poster_path}
+                          voteAverage={movie.vote_average}
+                        />
+                      </SearchDetail>
+                    </Link>
                   ))}
                 </ResultCont>
               </ContentsResultWrapper>
@@ -106,14 +117,17 @@ const Search = () => {
                 <ResultTitle>TV 검색 결과</ResultTitle>
                 <ResultCont>
                   {tvData.results.map((tv) => (
-                    <ColumnComp
-                      key={tv.id + tv.name}
-                      movieID={tv.id}
-                      movieTitle={tv.name}
-                      overview={tv.overview}
-                      posterPath={tv.poster_path}
-                      voteAverage={tv.vote_average}
-                    />
+                    <SearchDetail layoutId={tv.id + ""} key={tv.id + tv.name}>
+                      <Link to={`/search/${tv.id}`}>
+                        <ColumnComp
+                          movieID={tv.id}
+                          movieTitle={tv.name}
+                          overview={tv.overview}
+                          posterPath={tv.poster_path}
+                          voteAverage={tv.vote_average}
+                        />
+                      </Link>
+                    </SearchDetail>
                   ))}
                 </ResultCont>
               </ContentsResultWrapper>
@@ -121,6 +135,13 @@ const Search = () => {
           </>
         )}
       </ResultWrapper>
+      {id && (
+        <AnimatePresence>
+          <SearchDetail layoutId={id}>
+            <DetailComp id={id} />
+          </SearchDetail>
+        </AnimatePresence>
+      )}
     </PageWrapper>
   );
 };
