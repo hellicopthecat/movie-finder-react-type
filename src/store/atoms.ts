@@ -1,4 +1,4 @@
-import {atom} from "recoil";
+import {atom, selector} from "recoil";
 
 export const isDark = atom({
   key: "isDark",
@@ -48,4 +48,8 @@ export const topTvIndex = atom({
 export const topTvToggle = atom({
   key: "topRateTvToggle",
   default: false,
+});
+export const searchText = atom({
+  key: "searchText",
+  default: "",
 });

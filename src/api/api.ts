@@ -28,6 +28,12 @@ export const movieApi = {
       .then((res) => res.json())
       .catch(console.log);
   },
+  detail: async ({queryKey}: any) => {
+    const [, , id] = queryKey;
+    return await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=ko`)
+      .then((res) => res.json())
+      .catch(console.log);
+  },
 };
 export const tvApi = {
   onTheAir: () =>
@@ -55,6 +61,12 @@ export const tvApi = {
     return await fetch(
       `${BASE_URL}/search/tv?api_key=${API_KEY}&query=${query}&language=ko&page=1&region=kr`
     )
+      .then((res) => res.json())
+      .catch(console.log);
+  },
+  detail: async ({queryKey}: any) => {
+    const [, , id] = queryKey;
+    return await fetch(`${BASE_URL}/tv/${id}?api_key=${API_KEY}&language=ko`)
       .then((res) => res.json())
       .catch(console.log);
   },

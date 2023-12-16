@@ -25,14 +25,12 @@ const UpcomeDesc = styled.p`
 `;
 interface IColumnList {
   movieTitle: string;
-  movieID: number;
   posterPath: string;
   overview: string;
   voteAverage: number;
 }
 const ColumnComp: React.FC<IColumnList> = ({
   movieTitle,
-  movieID,
   posterPath,
   overview,
   voteAverage,

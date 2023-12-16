@@ -217,7 +217,6 @@ const Home: React.FC = () => {
                     >
                       <Link to={`movie/${upcome.id}`}>
                         <ColumnComp
-                          movieID={upcome.id}
                           movieTitle={
                             upcome.title !== ""
                               ? upcome.title

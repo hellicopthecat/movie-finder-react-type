@@ -1,7 +1,10 @@
 import {motion} from "framer-motion";
 import {useState} from "react";
-
+import {useForm} from "react-hook-form";
+import {useMatch, useNavigate} from "react-router-dom";
+import {useSetRecoilState} from "recoil";
 import styled from "styled-components";
+import {searchText} from "../../store/atoms";
 
 const SearchForm = styled(motion.form)`
   display: flex;
@@ -23,17 +26,30 @@ const SearchInput = styled(motion.input)`
   &::placeholder {
     color: ${(props) => props.theme.accetTxt};
   }
+  color: ${(props) => props.theme.accetTxt};
 `;
 const HomeSearch = () => {
   const [isActive, setActive] = useState(false);
+  const navigate = useNavigate();
+  const searchMatch = useMatch("/search");
+  const {register, watch} = useForm();
+  const setSearchText = useSetRecoilState(searchText);
+  setSearchText(watch("searchInput"));
 
   const onClick = async () => {
     setActive((prev) => !prev);
+    if (searchMatch) {
+      setActive(false);
+    }
   };
-  const onSubmit = () => {};
+  const goToSearch = () => {
+    if (searchMatch) {
+      return;
+    }
+    navigate("/search");
+  };
   return (
     <SearchForm
-      onSubmit={onSubmit}
       initial={{width: isActive ? "30%" : "100%"}}
       animate={{width: isActive ? "100%" : "30%"}}
       transition={{type: "tween", duration: 0.7}}
@@ -59,6 +75,8 @@ const HomeSearch = () => {
         transition={{type: "tween", duration: 0.7}}
         type="text"
         placeholder="Search Media"
+        onClick={goToSearch}
+        {...register("searchInput")}
       />
     </SearchForm>
   );

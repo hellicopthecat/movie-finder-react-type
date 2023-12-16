@@ -247,20 +247,23 @@ const Tv: React.FC = () => {
               <AnimatePresence>
                 <ColumCont>
                   {popularData?.results.map((popular) => (
-                    <Link to={`/tv/${popular.id}`}>
-                      <ColumnComp
-                        key={popular.id + popular.name}
-                        movieID={popular.id}
-                        movieTitle={
-                          popular.name !== ""
-                            ? popular.name
-                            : popular.original_name
-                        }
-                        voteAverage={popular.vote_average}
-                        posterPath={popular.poster_path}
-                        overview={popular.overview}
-                      />
-                    </Link>
+                    <LayoutCont
+                      layoutId={popular.id + ""}
+                      key={popular.id + popular.name}
+                    >
+                      <Link to={`/tv/${popular.id}`}>
+                        <ColumnComp
+                          movieTitle={
+                            popular.name !== ""
+                              ? popular.name
+                              : popular.original_name
+                          }
+                          voteAverage={popular.vote_average}
+                          posterPath={popular.poster_path}
+                          overview={popular.overview}
+                        />
+                      </Link>
+                    </LayoutCont>
                   ))}
                 </ColumCont>
               </AnimatePresence>

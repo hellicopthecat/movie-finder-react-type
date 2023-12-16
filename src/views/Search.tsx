@@ -8,6 +8,8 @@ import ColumnComp from "../components/body/columnComp/ColumnComp";
 import {Link, useParams} from "react-router-dom";
 import {AnimatePresence, motion} from "framer-motion";
 import DetailComp from "./DetailComp";
+import {useRecoilValue} from "recoil";
+import {searchText} from "../store/atoms";
 
 const PageWrapper = styled.div`
   margin-top: 90px;
@@ -21,10 +23,19 @@ const SearchCont = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const SearchTxtCont = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
 const SearchLabel = styled.label`
   font-size: 25px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-left: 20px;
+`;
+const SerachIcon = styled.svg`
+  width: 30px;
+  height: 30px;
 `;
 const SearchInput = styled.input`
   color: ${(props) => props.theme.accetTxt};
@@ -57,9 +68,13 @@ const ResultTitle = styled.h2`
   font-weight: 700;
 `;
 const SearchDetail = styled(motion.div)``;
+
 const Search = () => {
   const {register, watch} = useForm<IInputs>();
-  const searchTxt = watch("searchInput");
+  const headSearch = useRecoilValue(searchText);
+  const searchPageTxt = watch("searchInput");
+  const searchTxt = headSearch || searchPageTxt || "";
+
   //Api data
   const {data: movieData, isLoading: movieIsLoading} = useQuery<IMovieResults>(
     ["MOVIE", "searchMovie", searchTxt],
@@ -77,7 +92,23 @@ const Search = () => {
       <SearchWrapper>
         <SearchForm>
           <SearchCont>
-            <SearchLabel>검색어 입력</SearchLabel>
+            <SearchTxtCont>
+              <SerachIcon
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
+              </SerachIcon>
+              <SearchLabel>검색어 입력</SearchLabel>
+            </SearchTxtCont>
             <SearchInput
               placeholder="검색어를 입력해주세요"
               {...register("searchInput", {required: true})}
@@ -96,18 +127,19 @@ const Search = () => {
                 <ResultTitle>영화 검색 결과</ResultTitle>
                 <ResultCont>
                   {movieData?.results.map((movie) => (
-                    <Link to={`/search/${movie.id}`}>
-                      <SearchDetail layoutId={movie.id + ""}>
+                    <SearchDetail
+                      layoutId={movie.id + ""}
+                      key={movie.id + movie.original_title}
+                    >
+                      <Link to={`/search/${movie.id}`}>
                         <ColumnComp
-                          key={movie.id + movie.original_title}
-                          movieID={movie.id}
                           movieTitle={movie.title}
                           overview={movie.overview}
                           posterPath={movie.poster_path}
                           voteAverage={movie.vote_average}
                         />
-                      </SearchDetail>
-                    </Link>
+                      </Link>
+                    </SearchDetail>
                   ))}
                 </ResultCont>
               </ContentsResultWrapper>
@@ -120,7 +152,6 @@ const Search = () => {
                     <SearchDetail layoutId={tv.id + ""} key={tv.id + tv.name}>
                       <Link to={`/search/${tv.id}`}>
                         <ColumnComp
-                          movieID={tv.id}
                           movieTitle={tv.name}
                           overview={tv.overview}
                           posterPath={tv.poster_path}
