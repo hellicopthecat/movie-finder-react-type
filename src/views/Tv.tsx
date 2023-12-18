@@ -69,6 +69,7 @@ const RowSlideHeader = styled.div`
 const Title = styled.h2`
   font-size: 30px;
   font-weight: 600;
+  color: ${(props) => props.theme.titleColor};
 `;
 const ColumnWrapper = styled.div``;
 const ColumnHeader = styled.div`

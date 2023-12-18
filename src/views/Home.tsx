@@ -68,6 +68,7 @@ const RowCont = styled(motion.div)`
 const Title = styled.h2`
   font-size: 30px;
   font-weight: 800;
+  color: ${(props) => props.theme.titleColor};
 `;
 const UpcomingWrapper = styled.div`
   position: relative;
@@ -213,8 +214,8 @@ const Home: React.FC = () => {
             <UpcomingWrapper>
               <Title>UPCOMING</Title>
               <UpcomingCont>
-                {upcomingData?.results.map((upcome) => (
-                  <AnimatePresence>
+                <AnimatePresence>
+                  {upcomingData?.results.map((upcome) => (
                     <ColumnSliderCont
                       key={upcome.id + upcome.original_title}
                       layoutId={upcome.id + ""}
@@ -232,8 +233,8 @@ const Home: React.FC = () => {
                         />
                       </Link>
                     </ColumnSliderCont>
-                  </AnimatePresence>
-                ))}
+                  ))}
+                </AnimatePresence>
               </UpcomingCont>
             </UpcomingWrapper>
           </MovieContWrapper>

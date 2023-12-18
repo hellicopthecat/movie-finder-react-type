@@ -15,7 +15,6 @@ const LatestCont = styled(motion.div)<{$path: string}>`
   height: 700px;
   background: ${(props) =>
     `url(${props.$path !== null && imgMaker(props.$path, "original")})`};
-  background-color: ${(props) => props.$path === null && props.theme.accetTxt};
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -24,10 +23,11 @@ const LatestGradient = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  transition: 0.3s ease-in-out;
   background: ${(props) =>
     `linear-gradient(transparent 60%, ${props.theme.bgColor}) 40%`};
 `;
-const LatestTextCont = styled.div`
+const LatestTextWrapper = styled.div`
   position: absolute;
   bottom: 0;
   z-index: 90;
@@ -35,22 +35,31 @@ const LatestTextCont = styled.div`
   flex-direction: column;
   margin: 60px 30px;
 `;
+const LatestTextCont = styled.div`
+  padding: 30px;
+  width: 70%;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+`;
 const LatestTitle = styled.h2`
   font-weight: 700;
   font-size: 40px;
   margin-bottom: 20px;
+  color: ${(props) => props.theme.titleColor};
 `;
 const LatestDesc = styled.p`
-  width: 60%;
+  width: 100%;
   font-size: 20px;
   margin-bottom: 20px;
+  line-height: 22px;
 `;
 const LatestBtn = styled(motion.span)`
   cursor: pointer;
   display: inline-flex;
   padding: 10px 20px;
-  color: ${(props) => props.theme.txtColor};
+  color: ${(props) => props.theme.titleColor};
   background-color: ${(props) => props.theme.bgColor};
+  transition: 0.3s ease-in-out;
 `;
 const NowPlayBtnCont = styled.div``;
 const NextSlideBtn = styled(LatestBtn)`
@@ -103,14 +112,16 @@ const Latest: React.FC<ILatest> = ({
   return (
     <LatestCont $path={posterPath}>
       <LatestGradient />
-      <LatestTextCont>
-        <LatestTitle>{title}</LatestTitle>
-        <LatestDesc>{overview}</LatestDesc>
-        <NowPlayBtnCont>
-          <LatestBtn onClick={goToPage}>About Movie</LatestBtn>
-          <NextSlideBtn onClick={nextItem}>Next</NextSlideBtn>
-        </NowPlayBtnCont>
-      </LatestTextCont>
+      <LatestTextWrapper>
+        <LatestTextCont>
+          <LatestTitle>{title}</LatestTitle>
+          <LatestDesc>{overview}</LatestDesc>
+          <NowPlayBtnCont>
+            <LatestBtn onClick={goToPage}>About Movie</LatestBtn>
+            <NextSlideBtn onClick={nextItem}>Next</NextSlideBtn>
+          </NowPlayBtnCont>
+        </LatestTextCont>
+      </LatestTextWrapper>
     </LatestCont>
   );
 };

@@ -23,7 +23,7 @@ const Header = styled(motion.header)`
   justify-content: space-between;
   align-items: center;
   color: ${(props) => props.theme.accetTxt};
-  background-color: ${(props) => props.theme.bgColor};
+  transition: 0.3s ease-in-out;
 `;
 const LogoImg = styled.img`
   width: 150px;
@@ -41,6 +41,7 @@ const NavCont = styled(motion.ul)`
 const NavList = styled(motion.div)`
   position: relative;
   font-size: 20px;
+  font-weight: 600;
   margin-right: 30px;
 `;
 const ThemeBtnCont = styled.div``;
@@ -52,14 +53,14 @@ const ThemeBtnBorder = styled(motion.div)`
   height: 27px;
   border: 2px solid #96c464;
   border-radius: 25px;
-  background-color: ${(props) => props.theme.txtColor};
+  background-color: ${(props) => props.theme.themeBtnBgColor};
 `;
 const ThemeBtn = styled(motion.button)<{$mode: boolean}>`
   width: 25px;
   height: 25px;
   border-radius: 100%;
   transform: ${(props) => (props.$mode ? "translateX(0)" : "translateX(100%)")};
-  transition: 0.2s ease-in-out;
+  transition: 0.3s ease-in-out;
   background-color: ${(props) => props.theme.accetTxt};
 `;
 const UtilCont = styled.div`
@@ -68,7 +69,7 @@ const UtilCont = styled.div`
   align-items: center;
 `;
 const navVarient = {
-  top: {backgroundColor: "#1B262C"},
+  top: {backgroundColor: "rgba(0,0,0,0)"},
   scroll: {backgroundColor: "rgba(0,0,0,0.5)"},
 };
 
@@ -91,7 +92,12 @@ const HeaderComp = () => {
   });
 
   return (
-    <Header initial="top" variants={navVarient} animate={navAnimation}>
+    <Header
+      custom={themeMode}
+      variants={navVarient}
+      initial="top"
+      animate={navAnimation}
+    >
       <NavWrapper>
         <Link to="/">
           <LogoImg

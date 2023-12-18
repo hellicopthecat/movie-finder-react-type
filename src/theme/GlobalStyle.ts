@@ -34,6 +34,7 @@ body {
 	width:100%;
 	background-color:${(props) => props.theme.bgColor};
 	color:${(props) => props.theme.txtColor};
+	transition:0.3s ease-in-out
 }
 ol, ul {
 	list-style: none;

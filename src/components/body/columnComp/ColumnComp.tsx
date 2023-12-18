@@ -18,6 +18,7 @@ const UpcomeTitle = styled.h2`
   font-size: 35px;
   font-weight: 600;
   margin-bottom: 20px;
+  color: ${(props) => props.theme.titleColor};
 `;
 const UpcomeDesc = styled.p`
   width: 70%;
