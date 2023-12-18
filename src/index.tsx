@@ -7,6 +7,7 @@ import {HashRouter, RouterProvider} from "react-router-dom";
 import {router} from "./router";
 import {QueryClient, QueryClientProvider} from "react-query";
 import App from "./App";
+import {HelmetProvider} from "react-helmet-async";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,9 +17,11 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        <HashRouter>
-          <App />
-        </HashRouter>
+        <HelmetProvider>
+          <HashRouter>
+            <App />
+          </HashRouter>
+        </HelmetProvider>
       </RecoilRoot>
     </QueryClientProvider>
   </React.StrictMode>

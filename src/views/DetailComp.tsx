@@ -6,6 +6,8 @@ import {movieApi, tvApi} from "../api/api";
 import {IMovieDetail, ITvDetail} from "../type/apiModel";
 import Loading from "../components/utilcomp/Loading";
 import {imgMaker} from "../util/utils";
+import {Helmet} from "react-helmet-async";
+import Voteaverage from "../components/utilcomp/Voteaverage";
 
 const Overlay = styled.div`
   z-index: 96;
@@ -32,7 +34,7 @@ const DetailImg = styled.div<{$path: string}>`
   border-radius: 25px 25px 0 0;
   background-color: ${(props) =>
     props.$path === "" || props.$path === null ? props.theme.accetTxt : null};
-  background-image: url(${(props) => imgMaker(props.$path)});
+  background-image: url(${(props) => imgMaker(props.$path, "original")});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -51,7 +53,9 @@ const DetailTitle = styled.h2`
   color: ${(props) => props.theme.accetTxt};
   margin-bottom: 20px;
 `;
-const OverView = styled.p``;
+const OverView = styled.p`
+  margin: 20px 0;
+`;
 interface IContentID {
   id?: string;
 }
@@ -87,6 +91,12 @@ const DetailComp: React.FC<IContentID> = ({id}) => {
 
   return (
     <Overlay onClick={backHome}>
+      <Helmet>
+        {tvMatch && tvData && <title>{tvData.name} | MOVIEFLEX</title>}
+        {movieMatch && movieData && (
+          <title>{movieData.title} | MOVIEFLEX</title>
+        )}
+      </Helmet>
       {isLoading ? (
         <Loading />
       ) : (
@@ -96,6 +106,7 @@ const DetailComp: React.FC<IContentID> = ({id}) => {
               <DetailImg $path={tvData.backdrop_path} />
               <DetailInfo>
                 <DetailTitle>{tvData.name}</DetailTitle>
+                <Voteaverage score={tvData.vote_average} />
                 <OverView>{tvData.overview}</OverView>
               </DetailInfo>
             </DetailCont>
@@ -105,6 +116,7 @@ const DetailComp: React.FC<IContentID> = ({id}) => {
               <DetailImg $path={movieData.backdrop_path} />
               <DetailInfo>
                 <DetailTitle>{movieData.title}</DetailTitle>
+                <Voteaverage score={movieData.vote_average} />
                 <OverView>{movieData.overview}</OverView>
               </DetailInfo>
             </DetailCont>

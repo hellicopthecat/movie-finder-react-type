@@ -10,6 +10,7 @@ import {AnimatePresence, motion} from "framer-motion";
 import DetailComp from "./DetailComp";
 import {useRecoilValue} from "recoil";
 import {searchText} from "../store/atoms";
+import {Helmet} from "react-helmet-async";
 
 const PageWrapper = styled.div`
   margin-top: 90px;
@@ -89,6 +90,9 @@ const Search = () => {
   const isLoading = movieIsLoading || tvIsLoading;
   return (
     <PageWrapper>
+      <Helmet>
+        <title>SEARCH | MOVIEFLEX</title>
+      </Helmet>
       <SearchWrapper>
         <SearchForm>
           <SearchCont>

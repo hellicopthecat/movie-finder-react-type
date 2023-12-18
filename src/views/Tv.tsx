@@ -22,6 +22,7 @@ import {
 import {Link, useMatch} from "react-router-dom";
 
 import DetailComp from "./DetailComp";
+import {Helmet} from "react-helmet-async";
 
 const TvCont = styled.div`
   display: flex;
@@ -135,6 +136,9 @@ const Tv: React.FC = () => {
   const offset = 6;
   return (
     <TvCont>
+      <Helmet>
+        <title>TV | MOVIEFLEX</title>
+      </Helmet>
       {isLoading ? (
         <Loading />
       ) : (

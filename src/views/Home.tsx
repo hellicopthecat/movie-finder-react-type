@@ -18,6 +18,7 @@ import {
   topRateMovieToggle,
 } from "../store/atoms";
 import DetailComp from "./DetailComp";
+import {Helmet} from "react-helmet-async";
 
 const HomeCont = styled.div`
   display: flex;
@@ -129,6 +130,9 @@ const Home: React.FC = () => {
   const offset = 6;
   return (
     <HomeCont>
+      <Helmet>
+        <title>HOME | MOVIEFLEX</title>
+      </Helmet>
       {isLoading ? (
         <Loading />
       ) : (
